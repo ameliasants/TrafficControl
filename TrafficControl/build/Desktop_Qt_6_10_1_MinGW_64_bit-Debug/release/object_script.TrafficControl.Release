@@ -1,0 +1,12 @@
+release/autocarro_escolar.o
+release/carro_pais.o
+release/emergencia.o
+release/estado_amarelo.o
+release/estado_intermitente.o
+release/estado_verde.o
+release/estado_vermelho.o
+release/semaforo.o
+release/sensoronibus.o
+release/sensorpresenca.o
+release/veiculo.o
+release/main.o

@@ -1,0 +1,12 @@
+debug/autocarro_escolar.o
+debug/carro_pais.o
+debug/emergencia.o
+debug/estado_amarelo.o
+debug/estado_intermitente.o
+debug/estado_verde.o
+debug/estado_vermelho.o
+debug/semaforo.o
+debug/sensoronibus.o
+debug/sensorpresenca.o
+debug/veiculo.o
+debug/main.o
