@@ -18,8 +18,24 @@ public:
     EstadoSemaforo& estadoAtual() const { return *estadoAtual_; }
 
     void atualizar(double deltaTempo);
-    bool permitePassagem() const { return estadoAtual_ && estadoAtual_->permitePassagem(); }
-    std::string estadoAtualNome() const { return estadoAtual_ ? estadoAtual_->nome() : "DESCONHECIDO"; }
+
+    // *** ALTERADO: regra especial para horário escolar ***
+    bool permitePassagem() const {
+        if (!estadoAtual_) return false;
+
+        // Se está em horário escolar e o estado é VERDE,
+        // os carros NÃO podem passar.
+        if (horarioEscolar_ && estadoAtual_->nome() == "VERDE") {
+            return false;
+        }
+
+        // Caso contrário, segue a regra normal do estado
+        return estadoAtual_->permitePassagem();
+    }
+
+    std::string estadoAtualNome() const {
+        return estadoAtual_ ? estadoAtual_->nome() : "DESCONHECIDO";
+    }
 
     void definirHorarioEscolar(bool ativo) { horarioEscolar_ = ativo; }
     bool estaEmHorarioEscolar() const { return horarioEscolar_; }

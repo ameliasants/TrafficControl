@@ -1,8 +1,11 @@
 #include "autocarro_escolar.h"
 
 AutocarroEscolar::AutocarroEscolar(double posX, double vel)
-    : Veiculo(posX, vel, 100) {}  // Alta prioridade
+    : Veiculo(posX, vel, 100)   // prioridade alta para escolar
+{
+}
 
-std::string AutocarroEscolar::tipo() const {
+std::string AutocarroEscolar::tipo() const
+{
     return "Autocarro Escolar";
 }

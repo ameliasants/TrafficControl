@@ -62,13 +62,11 @@ void EstadoAmarelo::atualizar(SemaforoContexto& contexto, double deltaTempo) {
 void EstadoVermelho::atualizar(SemaforoContexto& contexto, double deltaTempo) {
     contexto.incrementarTempoNoEstado(deltaTempo);
     if (contexto.tempoNoEstado() > 10.0) {
-        if (contexto.estaEmHorarioEscolar()) {
-            contexto.definirEstado(std::make_unique<EstadoIntermitenteEscolar>());
-        } else {
-            contexto.definirEstado(std::make_unique<EstadoVerde>());
-        }
+        // Sempre segue para VERDE (ciclo normal), mesmo em horário escolar
+        contexto.definirEstado(std::make_unique<EstadoVerde>());
     }
 }
+
 
 void EstadoIntermitenteEscolar::atualizar(SemaforoContexto& contexto, double deltaTempo) {
     contexto.incrementarTempoNoEstado(deltaTempo);
