@@ -82,5 +82,11 @@ bool GestorConfiguracao::estaEmHorarioEscolar() const {
 // ==================== TEMPO DE VERDE ====================
 
 int GestorConfiguracao::tempoVerdeAtual() const {
+    // Em modo de teste, usamos um tempo menor para ver o ciclo completo mais rápido
+    if (modoTeste_) {
+        return 5; // por exemplo, 5 segundos de verde no teste
+    }
+
+    // Comportamento normal
     return estaEmHorarioEscolar() ? tempoVerdeEscolar_ : tempoVerdeNormal_;
 }

@@ -54,10 +54,11 @@ void EstadoVerde::atualizar(SemaforoContexto& contexto, double deltaTempo) {
 
 void EstadoAmarelo::atualizar(SemaforoContexto& contexto, double deltaTempo) {
     contexto.incrementarTempoNoEstado(deltaTempo);
-    if (contexto.tempoNoEstado() > 3.0) { // 3 segundos, por exemplo
+    if (contexto.tempoNoEstado() > 3.0) {
         contexto.definirEstado(std::make_unique<EstadoVermelho>());
     }
 }
+
 
 void EstadoVermelho::atualizar(SemaforoContexto& contexto, double deltaTempo) {
     contexto.incrementarTempoNoEstado(deltaTempo);

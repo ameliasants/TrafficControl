@@ -4,14 +4,10 @@
 #include <chrono>
 
 #include "fabrica_veiculos.h"
-#include "autocarro_escolar.h"
-#include "carro_comum.h"
+
 #include "semaforo_contexto.h"
 #include "gestor_configuracao.h"
-#include "estado_verde.h"
-#include "estado_amarelo.h"
-#include "estado_vermelho.h"
-#include "estado_intermitente_escolar.h"
+
 
 int main()
 {
@@ -28,7 +24,7 @@ int main()
               << " | prioridade = " << vPais->prioridade() << '\n';
 
     std::cout << "[Factory] Prioridade escolar < pais ? "
-              << ( (*vEscolar) < (*vPais) ? "SIM (escolar tem PRIORIDADE)" : "NÃO" ) << '\n';
+              << ( (*vEscolar) < (*vPais) ? "SIM (escolar tem PRIORIDADE)" : "NAO" ) << '\n';
 
     // 2) TESTE DE POLIMORFISMO
     std::cout << "\n[Teste Polimorfismo] Movimento dos veiculos:\n";
@@ -77,8 +73,8 @@ int main()
     for (int i = 0; i < 30; ++i) {  // Mais iterações para ver ciclos
         std::cout << "Iteracao " << i
                   << " | Estado = " << semaforo.estadoAtualNome()
-                  << " | Pode passar = " << (semaforo.permitePassagem() ? "SIM" : "NÃO")
-                  << " | Horario escolar = " << (semaforo.estaEmHorarioEscolar() ? "SIM" : "NÃO")
+                  << " | Carros pode passar = " << (semaforo.permitePassagem() ? "SIM" : "NAO")
+                  << " | Horario escolar = " << (semaforo.estaEmHorarioEscolar() ? "SIM" : "NAO")
                   << " | Tempo no estado = " << semaforo.tempoNoEstado() << "s"
                   << std::endl;
 
@@ -87,8 +83,6 @@ int main()
         std::this_thread::sleep_for(std::chrono::milliseconds(500));  // Mais lento para visualizar
     }
 
-    std::cout << "\n===== FIM DO TESTE (prioridade veicular + horario escolar OK!) =====\n";
-    std::cout << "Pressione ENTER para sair...\n";
     std::cin.get();
     return 0;
 }
