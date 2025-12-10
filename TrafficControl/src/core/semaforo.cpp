@@ -1,4 +1,4 @@
-#include "semaforo_contexto.h"
+#include "semaforo.h"
 #include "estado_vermelho.h"      // definição completa
 #include <memory>
 

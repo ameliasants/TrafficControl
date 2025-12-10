@@ -1,5 +1,5 @@
-#ifndef SEMAFORO_CONTEXTO_H
-#define SEMAFORO_CONTEXTO_H
+#ifndef SEMAFORO_H
+#define SEMAFORO_H
 
 #include "estado_semaforo.h"
 #include <memory>

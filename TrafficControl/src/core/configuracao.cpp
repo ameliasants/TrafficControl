@@ -1,4 +1,4 @@
-#include "gestor_configuracao.h"
+#include "configuracao.h"
 #include <fstream>
 #include <sstream>
 #include <ctime>
@@ -15,10 +15,11 @@ const char* ErroConfiguracao::what() const noexcept {
 // ==================== CONSTRUTOR ====================
 
 GestorConfiguracao::GestorConfiguracao()
-    : tempoVerdeNormal_(30),
-    tempoVerdeEscolar_(45),
+    : tempoVerdeNormal_(5),      // 5 segundos fora do horario escolar
+    tempoVerdeEscolar_(5),     // 5 segundos em horario escolar (ou 8, se quiser)
     modoTeste_(false),
     horarioEscolarForcado_(false) {}
+
 
 GestorConfiguracao::~GestorConfiguracao() = default;
 
@@ -50,7 +51,7 @@ void GestorConfiguracao::carregarConfiguracao(const std::string& caminhoFicheiro
     // Parsing real ficará na camada UI com Qt JSON
 }
 
-// ==================== NOVO: CONTROLO DE TESTE ====================
+// ==================== CONTROLO DE TESTE ====================
 
 void GestorConfiguracao::definirModoTeste(bool ativo) {
     modoTeste_ = ativo;
@@ -82,11 +83,5 @@ bool GestorConfiguracao::estaEmHorarioEscolar() const {
 // ==================== TEMPO DE VERDE ====================
 
 int GestorConfiguracao::tempoVerdeAtual() const {
-    // Em modo de teste, usamos um tempo menor para ver o ciclo completo mais rápido
-    if (modoTeste_) {
-        return 5; // por exemplo, 5 segundos de verde no teste
-    }
-
-    // Comportamento normal
     return estaEmHorarioEscolar() ? tempoVerdeEscolar_ : tempoVerdeNormal_;
 }

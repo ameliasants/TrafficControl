@@ -2,12 +2,17 @@
 #include <memory>
 #include <thread>
 #include <chrono>
+#include <limits>
 
 #include "fabrica_veiculos.h"
-
-#include "semaforo_contexto.h"
-#include "gestor_configuracao.h"
-
+#include "autocarro_escolar.h"
+#include "carro_comum.h"
+#include "semaforo.h"
+#include "configuracao.h"
+#include "estado_verde.h"
+#include "estado_amarelo.h"
+#include "estado_vermelho.h"
+#include "estado_intermitente_escolar.h"
 
 int main()
 {
@@ -24,7 +29,8 @@ int main()
               << " | prioridade = " << vPais->prioridade() << '\n';
 
     std::cout << "[Factory] Prioridade escolar < pais ? "
-              << ( (*vEscolar) < (*vPais) ? "SIM (escolar tem PRIORIDADE)" : "NAO" ) << '\n';
+              << ( (*vEscolar) < (*vPais) ? "SIM (escolar tem PRIORIDADE)" : "NAO" )
+              << '\n';
 
     // 2) TESTE DE POLIMORFISMO
     std::cout << "\n[Teste Polimorfismo] Movimento dos veiculos:\n";
@@ -40,14 +46,28 @@ int main()
     // 3) TESTE DO SEMAFORO COM HORARIO ESCOLAR
     std::cout << "\n[Teste Semaforo] Transicoes de estado com PRIORIDADE ESCOLAR:\n";
 
-    // Obter singleton de configuração
     GestorConfiguracao& config = GestorConfiguracao::obterInstancia();
 
-    // *** NOVO: ATIVAR MODO DE TESTE E FORÇAR HORÁRIO ESCOLAR ***
-    config.definirModoTeste(true);              // sempre em modo de teste
-    config.definirHorarioEscolarForcado(true);  // força "estar em horario escolar"
+    // ATIVA MODO TESTE PARA USAR HORA SIMULADA
+    config.definirModoTeste(true);
 
-    // Carregar config (se existir); se não, usa defaults
+    // Pergunta a hora simulada
+    int hora;
+    std::cout << "\n--- SIMULACAO DE HORARIO ---\n";
+    std::cout << "Informe a HORA simulada (0-23): ";
+    std::cin >> hora;
+
+    // Calcula se essa hora é "horario escolar"
+    bool ehHorarioEscolarSimulado =
+        ((hora == 7 || hora == 8) || (hora == 17 || hora == 18));
+
+    // Força esse valor no gestor
+    config.definirHorarioEscolarForcado(ehHorarioEscolarSimulado);
+
+    // Limpa o \n do buffer para o std::cin.get() do final funcionar
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+    // Carrega config.json (se existir)
     try {
         config.carregarConfiguracao("config.json");
         std::cout << "Config.json carregado.\n";
@@ -55,34 +75,31 @@ int main()
         std::cout << "Falha ao carregar: " << e.what() << " (usa defaults)\n";
     }
 
-    // Verifica (agora sob o efeito do modo de teste) se está em horário escolar
+    // Agora estaEmHorarioEscolar() usa o valor simulado
     bool ehEscolar = config.estaEmHorarioEscolar();
-    std::cout << ">>> HORARIO ESCOLAR ATUAL? ";
-    if (ehEscolar) {
-        std::cout << "SIM (prioridade ALUNOS ativa! Tempo verde: "
-                  << config.tempoVerdeAtual() << "s)" << std::endl;
-    } else {
-        std::cout << "NAO" << std::endl;
-    }
+    std::cout << ">>> HORARIO ESCOLAR ATUAL? "
+              << (ehEscolar ? "SIM" : "NAO")
+              << " (hora simulada: " << hora << "h)\n";
 
-    // Cria o semáforo e aplica a info de horário escolar
     SemaforoContexto semaforo;
-    semaforo.definirHorarioEscolar(ehEscolar);  // *** ATIVA PRIORIDADE ***
+    semaforo.definirHorarioEscolar(ehEscolar);
 
     double passoTempo = 1.0;
-    for (int i = 0; i < 30; ++i) {  // Mais iterações para ver ciclos
+    for (int i = 0; i < 30; ++i) {
         std::cout << "Iteracao " << i
                   << " | Estado = " << semaforo.estadoAtualNome()
-                  << " | Carros pode passar = " << (semaforo.permitePassagem() ? "SIM" : "NAO")
+                  << " | Carros pode passar = "
+                  << (semaforo.permitePassagem() ? "SIM" : "NAO")
                   << " | Horario escolar = " << (semaforo.estaEmHorarioEscolar() ? "SIM" : "NAO")
                   << " | Tempo no estado = " << semaforo.tempoNoEstado() << "s"
                   << std::endl;
 
         semaforo.atualizar(passoTempo);
-
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));  // Mais lento para visualizar
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
     }
 
+    std::cout << "\n===== FIM DO TESTE (prioridade veicular + horario escolar OK!) =====\n";
+    std::cout << "Pressione ENTER para sair...\n";
     std::cin.get();
     return 0;
 }

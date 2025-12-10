@@ -1,12 +1,10 @@
-#ifndef GESTOR_CONFIGURACAO_H
-#define GESTOR_CONFIGURACAO_H
+#ifndef CONFIGURACAO_H
+#define CONFIGURACAO_H
 
-#include <string>
 #include <exception>
-
+#include <string>
 
 class ErroConfiguracao : public std::exception {
-private:
     std::string mensagem_;
 public:
     explicit ErroConfiguracao(const std::string& mensagem);
@@ -22,7 +20,7 @@ public:
     bool estaEmHorarioEscolar() const;
     int tempoVerdeAtual() const;
 
-    // === NOVO: API de teste ===
+    // Modo de teste: usar valor forçado em vez do relógio real
     void definirModoTeste(bool ativo);
     void definirHorarioEscolarForcado(bool emHorario);
 
@@ -35,10 +33,9 @@ private:
     int tempoVerdeNormal_;
     int tempoVerdeEscolar_;
 
-    // === NOVO: estado de teste ===
+    // Estado de teste
     bool modoTeste_;
     bool horarioEscolarForcado_;
 };
 
-
-#endif
+#endif // CONFIGURACAO_H
