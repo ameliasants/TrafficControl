@@ -159,8 +159,7 @@ debug/carro_comum.o: ../../src/core/carro_comum.cpp ../../include/carro_comum.h 
 		../../include/veiculo.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\carro_comum.o ..\..\src\core\carro_comum.cpp
 
-debug/configuracao.o: ../../src/core/configuracao.cpp ../../include/configuracao.h \
-		../../include/excecoes.h
+debug/configuracao.o: ../../src/core/configuracao.cpp ../../include/configuracao.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\configuracao.o ..\..\src\core\configuracao.cpp
 
 debug/estado_semaforo.o: ../../src/core/estado_semaforo.cpp ../../include/estado_semaforo.h \
@@ -178,7 +177,9 @@ debug/fabrica_veiculos.o: ../../src/core/fabrica_veiculos.cpp ../../include/fabr
 debug/semaforo.o: ../../src/core/semaforo.cpp ../../include/semaforo.h \
 		../../include/estado_semaforo.h \
 		../../include/excecoes.h \
-		../../include/estado_vermelho.h
+		../../include/estado_vermelho.h \
+		../../include/estado_intermitente_escolar.h \
+		../../include/estado_verde.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\semaforo.o ..\..\src\core\semaforo.cpp
 
 debug/veiculo.o: ../../src/core/veiculo.cpp ../../include/veiculo.h

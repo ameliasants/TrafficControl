@@ -1,6 +1,19 @@
 #include "semaforo.h"
 #include "estado_vermelho.h"
 #include "excecoes.h"
+#include "estado_intermitente_escolar.h"
+#include "estado_verde.h"
+
+
+void SemaforoContexto::ativarModoIntermitenteEscolar()
+{
+    definirEstado(std::make_unique<EstadoIntermitenteEscolar>());
+}
+
+void SemaforoContexto::desativarModoIntermitenteEscolar()
+{
+    definirEstado(std::make_unique<EstadoVerde>());
+}
 
 SemaforoContexto::SemaforoContexto()
     : estadoAtual_(nullptr), tempoNoEstado_(0.0), horarioEscolar_(false)

@@ -75,13 +75,14 @@ public:
 
 // ==================== LÓGICAS DE TRANSIÇÃO ====================
 
+
 void EstadoVerde::atualizar(SemaforoContexto& contexto, double deltaTempo) {
     contexto.incrementarTempoNoEstado(deltaTempo);
 
     double tempoVerde = GestorConfiguracao::obterInstancia().tempoVerdeAtual();
 
+    // Depois do tempo de verde, SEMPRE segue para amarelo
     if (contexto.tempoNoEstado() >= tempoVerde) {
-        // Depois do tempo de verde, SEMPRE passa para AMARELO
         contexto.definirEstado(std::make_unique<EstadoAmarelo>());
     }
 }
@@ -94,22 +95,47 @@ void EstadoAmarelo::atualizar(SemaforoContexto& contexto, double deltaTempo) {
         contexto.definirEstado(std::make_unique<EstadoVermelho>());
     }
 }
-
+/*
+// Vermelho: 10s; em horário escolar vai para intermitente, senão para verde.
 void EstadoVermelho::atualizar(SemaforoContexto& contexto, double deltaTempo) {
     contexto.incrementarTempoNoEstado(deltaTempo);
 
-    const double TEMPO_VERMELHO = 10.0; // 10 segundos em vermelho
+    const double TEMPO_VERMELHO = 10.0;
     if (contexto.tempoNoEstado() > TEMPO_VERMELHO) {
-        // Sempre segue para VERDE (ciclo normal)
-        contexto.definirEstado(std::make_unique<EstadoVerde>());
+
+        if (contexto.estaEmHorarioEscolar()) {
+            contexto.definirEstado(std::make_unique<EstadoIntermitenteEscolar>());
+        } else {
+            contexto.definirEstado(std::make_unique<EstadoVerde>());
+        }
+    }
+}
+*/
+
+void EstadoVermelho::atualizar(SemaforoContexto& contexto, double deltaTempo) {
+    contexto.incrementarTempoNoEstado(deltaTempo);
+    const double TEMPO_VERMELHO = 10.0;
+
+    if (contexto.tempoNoEstado() >= TEMPO_VERMELHO) {
+        auto& cfg = GestorConfiguracao::obterInstancia();
+
+        if (cfg.estaEmHorarioEscolar() && cfg.haAlunos()) {
+            // Intermitente só se for horário escolar E houver alunos
+            contexto.definirEstado(std::make_unique<EstadoIntermitenteEscolar>());
+        } else {
+            // Caso contrário, segue ciclo normal
+            contexto.definirEstado(std::make_unique<EstadoVerde>());
+        }
     }
 }
 
-void EstadoIntermitenteEscolar::atualizar(SemaforoContexto& contexto, double deltaTempo) {
+void EstadoIntermitenteEscolar::atualizar(SemaforoContexto& contexto, double deltaTempo)
+{
     contexto.incrementarTempoNoEstado(deltaTempo);
 
-    // Se sair do horário escolar, volta para o ciclo normal (verde)
-    if (!GestorConfiguracao::obterInstancia().estaEmHorarioEscolar()) {
+    const double TEMPO_INTERMITENTE = 8.0; // por exemplo
+    if (contexto.tempoNoEstado() > TEMPO_INTERMITENTE) {
         contexto.definirEstado(std::make_unique<EstadoVerde>());
     }
+    // Caso contrário, permanece em INTERMITENTE_ESCOLAR
 }

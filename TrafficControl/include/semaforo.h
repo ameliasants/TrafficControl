@@ -20,21 +20,19 @@ public:
     void atualizar(double deltaTempo);
     EstadoSemaforo& estadoAtual() const { return *estadoAtual_; }
 
+    void ativarModoIntermitenteEscolar();
+    void desativarModoIntermitenteEscolar();
 
 
     // *** ALTERADO: regra especial para horário escolar ***
     bool permitePassagem() const {
-        if (!estadoAtual_) return false;
-
-        // Se está em horário escolar e o estado é VERDE,
-        // os carros NÃO podem passar.
-        if (horarioEscolar_ && estadoAtual_->nome() == "VERDE") {
+        if (!estadoAtual_)              // usa o membro com sublinhado
             return false;
-        }
 
-        // Caso contrário, segue a regra normal do estado
         return estadoAtual_->permitePassagem();
     }
+
+
 
     std::string estadoAtualNome() const {
         return estadoAtual_ ? estadoAtual_->nome() : "DESCONHECIDO";

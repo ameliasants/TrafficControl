@@ -64,6 +64,14 @@ int main()
     // Força esse valor no gestor
     config.definirHorarioEscolarForcado(ehHorarioEscolarSimulado);
 
+    // Pergunta se há alunos presentes
+    char respAlunos;
+    std::cout << "Existem ALUNOS para atravessar? (s/n): ";
+    std::cin >> respAlunos;
+    bool haAlunos = (respAlunos == 's' || respAlunos == 'S');
+    config.definirHaAlunos(haAlunos);
+
+
     // Limpa o \n do buffer para o std::cin.get() do final funcionar
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
@@ -83,6 +91,7 @@ int main()
 
     SemaforoContexto semaforo;
     semaforo.definirHorarioEscolar(ehEscolar);
+
 
     double passoTempo = 1.0;
     for (int i = 0; i < 30; ++i) {
