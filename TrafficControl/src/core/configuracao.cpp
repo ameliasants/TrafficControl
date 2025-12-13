@@ -3,10 +3,15 @@
 #include <sstream>
 #include <ctime>
 
+// Inicialização do singleton
 GestorConfiguracao* GestorConfiguracao::instancia_ = nullptr;
 
+// ==================== ErroConfiguracao ====================
+
 ErroConfiguracao::ErroConfiguracao(const std::string& mensagem)
-    : mensagem_(mensagem) {}
+    : mensagem_(mensagem)
+{
+}
 
 const char* ErroConfiguracao::what() const noexcept {
     return mensagem_.c_str();
@@ -15,17 +20,23 @@ const char* ErroConfiguracao::what() const noexcept {
 // ==================== CONSTRUTOR ====================
 
 GestorConfiguracao::GestorConfiguracao()
-    : tempoVerdeNormal_(5),      // 5 segundos fora do horario escolar
-    tempoVerdeEscolar_(5),     // 5 segundos em horario escolar (ou 8, se quiser)
+    : tempoVerdeNormal_(5),
+    tempoVerdeEscolar_(5),
     modoTeste_(false),
-    horarioEscolarForcado_(false) {}
-
+    horarioEscolarForcado_(false)
+{
+    // validação básica dos tempos
+    if (tempoVerdeNormal_ <= 0 || tempoVerdeEscolar_ <= 0) {
+        throw ConfiguracaoInvalidaException("tempos de verde devem ser positivos");
+    }
+}
 
 GestorConfiguracao::~GestorConfiguracao() = default;
 
 // ==================== SINGLETON ====================
 
-GestorConfiguracao& GestorConfiguracao::obterInstancia() {
+GestorConfiguracao& GestorConfiguracao::obterInstancia()
+{
     if (!instancia_) {
         instancia_ = new GestorConfiguracao();
     }
@@ -34,36 +45,42 @@ GestorConfiguracao& GestorConfiguracao::obterInstancia() {
 
 // ==================== CARREGAR CONFIG ====================
 
-void GestorConfiguracao::carregarConfiguracao(const std::string& caminhoFicheiro) {
+void GestorConfiguracao::carregarConfiguracao(const std::string& caminhoFicheiro)
+{
     std::ifstream ficheiro(caminhoFicheiro);
     if (!ficheiro.is_open()) {
-        throw ErroConfiguracao("Ficheiro config.json não encontrado: " + caminhoFicheiro);
+        // Erro específico de configuração
+        throw ConfiguracaoInvalidaException("ficheiro não encontrado: " + caminhoFicheiro);
     }
 
     std::stringstream buffer;
     buffer << ficheiro.rdbuf();
     std::string conteudo = buffer.str();
 
-    if (conteudo.find("\"zona_escolar\"") == std::string::npos) {
-        throw ErroConfiguracao("JSON inválido: falta objeto zona_escolar");
+    // Validação mínima do JSON (estrutura esperada)
+    if (conteudo.find("zona_escolar") == std::string::npos) {
+        throw ConfiguracaoInvalidaException("JSON inválido: falta objeto zona_escolar");
     }
 
-    // Parsing real ficará na camada UI com Qt JSON
+    // Parsing real do JSON fica na camada UI (Qt JSON)
 }
 
 // ==================== CONTROLO DE TESTE ====================
 
-void GestorConfiguracao::definirModoTeste(bool ativo) {
+void GestorConfiguracao::definirModoTeste(bool ativo)
+{
     modoTeste_ = ativo;
 }
 
-void GestorConfiguracao::definirHorarioEscolarForcado(bool emHorario) {
+void GestorConfiguracao::definirHorarioEscolarForcado(bool emHorario)
+{
     horarioEscolarForcado_ = emHorario;
 }
 
 // ==================== HORÁRIO ESCOLAR ====================
 
-bool GestorConfiguracao::estaEmHorarioEscolar() const {
+bool GestorConfiguracao::estaEmHorarioEscolar() const
+{
     // 1) Se estivermos em modo de teste, devolve sempre o valor forçado
     if (modoTeste_) {
         return horarioEscolarForcado_;
@@ -82,6 +99,7 @@ bool GestorConfiguracao::estaEmHorarioEscolar() const {
 
 // ==================== TEMPO DE VERDE ====================
 
-int GestorConfiguracao::tempoVerdeAtual() const {
+int GestorConfiguracao::tempoVerdeAtual() const
+{
     return estaEmHorarioEscolar() ? tempoVerdeEscolar_ : tempoVerdeNormal_;
 }

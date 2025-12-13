@@ -18,7 +18,8 @@ SOURCES += \
     src/core/fabrica_veiculos.cpp \
     src/core/semaforo.cpp \
     src/core/veiculo.cpp \
-    src/ui/main.cpp
+    testes/tst_semaforo.cpp
+    src/ui/main.cpp \
 
 
 HEADERS += \
@@ -30,6 +31,7 @@ HEADERS += \
     include/estado_semaforo.h \
     include/estado_verde.h \
     include/estado_vermelho.h \
+    include/excecoes.h \
     include/fabrica_veiculos.h \
     include/semaforo.h \
     include/veiculo.h

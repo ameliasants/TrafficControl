@@ -4,6 +4,7 @@
 #include "estado_semaforo.h"
 #include <memory>
 #include <string>
+#include "excecoes.h"
 
 class SemaforoContexto {
 private:
@@ -13,11 +14,13 @@ private:
 
 public:
     SemaforoContexto();
+    explicit SemaforoContexto(double tempoInicial);
 
     void definirEstado(std::unique_ptr<EstadoSemaforo> novoEstado);
+    void atualizar(double deltaTempo);
     EstadoSemaforo& estadoAtual() const { return *estadoAtual_; }
 
-    void atualizar(double deltaTempo);
+
 
     // *** ALTERADO: regra especial para horário escolar ***
     bool permitePassagem() const {

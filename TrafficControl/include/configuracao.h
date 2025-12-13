@@ -3,6 +3,7 @@
 
 #include <exception>
 #include <string>
+#include "excecoes.h"
 
 class ErroConfiguracao : public std::exception {
     std::string mensagem_;
@@ -32,8 +33,6 @@ private:
 
     int tempoVerdeNormal_;
     int tempoVerdeEscolar_;
-
-    // Estado de teste
     bool modoTeste_;
     bool horarioEscolarForcado_;
 };
