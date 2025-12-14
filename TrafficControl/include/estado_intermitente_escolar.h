@@ -9,7 +9,9 @@ public:
     void sair(SemaforoContexto& contexto) override;
     void atualizar(SemaforoContexto& contexto, double deltaTempo) override;
     std::string nome() const override { return "INTERMITENTE_ESCOLAR"; }
-    bool permitePassagem() const override { return true; }
+
+    // Aqui mudamos o comportamento: intermitente escolar = proibido para carros
+    bool permitePassagem() const override { return false; }
 };
 
 #endif

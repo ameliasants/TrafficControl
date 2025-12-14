@@ -1,0 +1,12 @@
+release/autocarro_escolar.o
+release/carro_comum.o
+release/configuracao.o
+release/estado_semaforo.o
+release/fabrica_veiculos.o
+release/semaforo.o
+release/veiculo.o
+release/main_console.o
+release/mainwindow.o
+release/semaforo_qt.o
+release/moc_mainwindow.o
+release/moc_semaforo_qt.o

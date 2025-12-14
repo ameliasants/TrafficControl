@@ -9,7 +9,6 @@ std::unique_ptr<Veiculo> FabricaVeiculos::criar(const std::string& tipo, double 
     } else if (tipo == "pais") {
         return std::make_unique<CarroComum>(posX, 12.0);
     } else {
-        // default: carro comum
         return std::make_unique<CarroComum>(posX, 8.0);
     }
 }

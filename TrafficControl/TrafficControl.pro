@@ -1,14 +1,13 @@
-QT += core
-QT -= gui
-greaterThan(QT_MAJOR_VERSION, 4): QT -= widgets
-CONFIG += c++17 console
+QT += core gui widgets
+
+CONFIG += console
+CONFIG += c++17
 CONFIG -= app_bundle
 
-TARGET = TrafficControl
-TEMPLATE = app
 
 INCLUDEPATH += $$PWD/include
 DEPENDPATH  += $$PWD/include
+
 
 SOURCES += \
     src/core/autocarro_escolar.cpp \
@@ -19,7 +18,7 @@ SOURCES += \
     src/core/semaforo.cpp \
     src/core/veiculo.cpp \
     testes/tst_semaforo.cpp
-    src/ui/main.cpp \
+    #src/ui/main_console.cpp
 
 
 HEADERS += \
@@ -38,3 +37,4 @@ HEADERS += \
 
 DISTFILES += \
     src/core/config.json
+

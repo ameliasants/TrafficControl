@@ -29,4 +29,4 @@ public:
         : SemaforoException("Veículo inválido: " + m) {}
 };
 
-#endif // EXCECOES_H
+#endif

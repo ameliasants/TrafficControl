@@ -6,24 +6,24 @@
 
 class Veiculo {
 protected:
-    double posicaoX_;      // metros na estrada
-    double velocidade_;    // m/s
-    int prioridade_;       // 0=normal, 100=escolar
+    double posicaoX_;
+    double velocidade_;
+    int prioridade_;
 
 public:
     Veiculo(double posX = 0.0, double vel = 0.0, int prio = 0);
     virtual ~Veiculo() = default;
 
-    // Getters puros (interface pública)
+
     double posicaoX() const { return posicaoX_; }
     double velocidade() const { return velocidade_; }
     int prioridade() const { return prioridade_; }
 
     // Movimentação
     virtual void atualizar(double deltaTempo);
-    virtual std::string tipo() const = 0;  // Polimorfismo
+    virtual std::string tipo() const = 0;
 
-    // Sobrecarga para fila de prioridade
+
     bool operator<(const Veiculo& outro) const;
 };
 

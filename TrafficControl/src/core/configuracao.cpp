@@ -3,7 +3,6 @@
 #include <sstream>
 #include <ctime>
 
-// Inicialização do singleton
 GestorConfiguracao* GestorConfiguracao::instancia_ = nullptr;
 
 // ==================== ErroConfiguracao ====================
@@ -26,7 +25,7 @@ GestorConfiguracao::GestorConfiguracao()
     horarioEscolarForcado_(false),
     haAlunos_(false)
 {
-    // validação básica dos tempos
+
     if (tempoVerdeNormal_ <= 0 || tempoVerdeEscolar_ <= 0) {
         throw ErroConfiguracao("tempos de verde devem ser positivos");
     }
@@ -50,16 +49,15 @@ GestorConfiguracao& GestorConfiguracao::obterInstancia()
 
 void GestorConfiguracao::carregarConfiguracao(const std::string& caminhoFicheiro)
 {
-    // 1) tenta o caminho recebido (ex.: "config.json")
+
     std::ifstream ficheiro(caminhoFicheiro);
     if (!ficheiro.is_open()) {
-        // teste 4 espera que isto dispare
+
         throw ErroConfiguracao("Ficheiro config.json nao encontrado: " + caminhoFicheiro);
     }
 
-    // 2) se falhar, tenta caminhos relativos comuns no shadow build do Qt
+
     if (!ficheiro.is_open()) {
-        // build/Desktop_.../debug  ->  voltar duas/ três pastas até à raiz
         const char* candidatos[] = {
             "../config.json",
             "../../config.json",
@@ -70,13 +68,11 @@ void GestorConfiguracao::carregarConfiguracao(const std::string& caminhoFicheiro
         for (const char* c : candidatos) {
             ficheiro.open(c);
             if (ficheiro.is_open()) {
-                // achou, podemos sair do loop
                 break;
             }
         }
 
         if (!ficheiro.is_open()) {
-            // nada encontrado em nenhum dos caminhos
             throw ErroConfiguracao(
                 "ficheiro não encontrado: " + caminhoFicheiro
                 );
@@ -108,18 +104,16 @@ void GestorConfiguracao::definirHorarioEscolarForcado(bool emHorario)
 
 bool GestorConfiguracao::estaEmHorarioEscolar() const
 {
-    // 1) Se estivermos em modo de teste, devolve sempre o valor forçado
     if (modoTeste_) {
         return horarioEscolarForcado_;
     }
 
-    // 2) Caso contrário, usa o relógio real do sistema
     std::time_t now = std::time(nullptr);
     std::tm* lt = std::localtime(&now);
     int hora = lt->tm_hour;
-    int wday = lt->tm_wday;  // 0=Dom, 1=Seg, ..., 6=Sáb
+    int wday = lt->tm_wday;
 
-    // Dias úteis (Seg-Sex) E (entrada 7-8h OU saída 17-18h)
+
     return (wday >= 1 && wday <= 5) &&
            ((hora >= 7 && hora < 8) || (hora >= 17 && hora < 18));
 }

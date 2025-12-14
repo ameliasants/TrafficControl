@@ -9,12 +9,10 @@ Veiculo::Veiculo(double posX, double vel, int prio)
 
 void Veiculo::atualizar(double deltaTempo)
 {
-    // Movimento simples: x = x + v * t
     posicaoX_ += velocidade_ * deltaTempo;
 }
 
 bool Veiculo::operator<(const Veiculo& outro) const
 {
-    // Maior prioridade deve "ganhar" na fila (ajuste se quiser o inverso)
     return prioridade_ < outro.prioridade_;
 }

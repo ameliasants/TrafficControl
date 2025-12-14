@@ -9,4 +9,4 @@ public:
     std::string tipo() const override;
 };
 
-#endif // AUTOCARRO_ESCOLAR_H
+#endif

@@ -9,4 +9,4 @@ public:
     static std::unique_ptr<Veiculo> criar(const std::string& tipo, double posX);
 };
 
-#endif // FABRICA_VEICULOS_H
+#endif

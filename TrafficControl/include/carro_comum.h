@@ -9,4 +9,4 @@ public:
     std::string tipo() const override;
 };
 
-#endif // CARRO_COMUM_H
+#endif

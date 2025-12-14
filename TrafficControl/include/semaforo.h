@@ -18,19 +18,11 @@ public:
 
     void definirEstado(std::unique_ptr<EstadoSemaforo> novoEstado);
     void atualizar(double deltaTempo);
+    bool permitePassagem() const;
     EstadoSemaforo& estadoAtual() const { return *estadoAtual_; }
 
     void ativarModoIntermitenteEscolar();
     void desativarModoIntermitenteEscolar();
-
-
-    // *** ALTERADO: regra especial para horário escolar ***
-    bool permitePassagem() const {
-        if (!estadoAtual_)              // usa o membro com sublinhado
-            return false;
-
-        return estadoAtual_->permitePassagem();
-    }
 
 
 

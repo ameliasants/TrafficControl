@@ -34,7 +34,7 @@ void SemaforoContexto::definirEstado(std::unique_ptr<EstadoSemaforo> novoEstado)
     if (!novoEstado)
         throw EstadoInvalidoException("novo estado nulo");
 
-    if (estadoAtual_)               // usa o ponteiro, não o getter
+    if (estadoAtual_)
         estadoAtual_->sair(*this);
 
     estadoAtual_ = std::move(novoEstado);
@@ -45,4 +45,15 @@ void SemaforoContexto::atualizar(double deltaTempo)
     if (estadoAtual_) {
         estadoAtual_->atualizar(*this, deltaTempo);
     }
+}
+
+bool SemaforoContexto::permitePassagem() const
+{
+    if (!estadoAtual_) return false;
+
+    if (estadoAtual_->nome() == "INTERMITENTE_ESCOLAR") {
+        return false;
+    }
+
+    return estadoAtual_->permitePassagem();
 }
