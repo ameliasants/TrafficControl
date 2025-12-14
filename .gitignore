@@ -1,0 +1,40 @@
+# Pastas de build (Qt Creator shadow build)
+build*/
+*/build*/
+
+# Binários e libs
+*.exe
+*.dll
+*.a
+*.lib
+
+# Ficheiros gerados pelo Qt / qmake
+*.o
+*.obj
+*.qm
+*.prl
+moc_*.cpp
+moc_*.h
+qrc_*.cpp
+ui_*.h
+*.qrc.dep
+.qmake.cache
+.qmake.stash
+Makefile*
+*.user
+*.autosave
+
+# Qt Creator / IDE
+*.pro.user
+CMakeLists.txt.user*
+*.creator.user*
+*.workspace
+.vscode/
+.idea/
+
+# Outros temporários
+*.log
+*.tmp
+*.swp
+.DS_Store
+Thumbs.db
