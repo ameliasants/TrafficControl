@@ -25,7 +25,7 @@ int main()
     // 2) Carregamento de configuração existente
     std::cout << "2. Carregamento de configuracao (ficheiro existe?)... ";
     try {
-        GestorConfiguracao::obterInstancia().carregarConfiguracao("../../../src/core/config.json");
+        GestorConfiguracao::obterInstancia().carregarConfiguracao("config.json");
         ok2 = true;
         std::cout << "OK\n";
     } catch (const ErroConfiguracao& e) {
