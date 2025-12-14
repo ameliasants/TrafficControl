@@ -17,8 +17,8 @@ SOURCES += \
     src/core/fabrica_veiculos.cpp \
     src/core/semaforo.cpp \
     src/core/veiculo.cpp \
-    testes/tst_semaforo.cpp
-    #src/ui/main_console.cpp
+    #testes/tst_semaforo.cpp
+    src/ui/main_console.cpp
 
 
 HEADERS += \

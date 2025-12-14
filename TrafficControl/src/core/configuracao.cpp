@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <ctime>
+#include <regex>
 
 GestorConfiguracao* GestorConfiguracao::instancia_ = nullptr;
 
@@ -45,47 +46,74 @@ GestorConfiguracao& GestorConfiguracao::obterInstancia()
 
 // ==================== CARREGAR CONFIG ====================
 
-
-
 void GestorConfiguracao::carregarConfiguracao(const std::string& caminhoFicheiro)
 {
-
     std::ifstream ficheiro(caminhoFicheiro);
     if (!ficheiro.is_open()) {
-
         throw ErroConfiguracao("Ficheiro config.json nao encontrado: " + caminhoFicheiro);
-    }
-
-
-    if (!ficheiro.is_open()) {
-        const char* candidatos[] = {
-            "../config.json",
-            "../../config.json",
-            "../../../src/core/config.json",
-            "../../src/core/config.json"
-        };
-
-        for (const char* c : candidatos) {
-            ficheiro.open(c);
-            if (ficheiro.is_open()) {
-                break;
-            }
-        }
-
-        if (!ficheiro.is_open()) {
-            throw ErroConfiguracao(
-                "ficheiro não encontrado: " + caminhoFicheiro
-                );
-        }
     }
 
     std::stringstream buffer;
     buffer << ficheiro.rdbuf();
     std::string conteudo = buffer.str();
 
-    if (conteudo.find("zona_escolar") == std::string::npos) {
-        throw ErroConfiguracao("JSON inválido: falta objeto zona_escolar");
+    // Verifica presença do objeto zona_escolar
+    if (conteudo.find("\"zona_escolar\"") == std::string::npos) {
+        throw ErroConfiguracao("JSON invalido: falta objeto zona_escolar");
     }
+
+    std::smatch m;
+
+    auto extrairString = [&](const std::string& chave) -> std::string {
+        std::regex re("\"" + chave + "\"\\s*:\\s*\"([^\"]+)\"");
+        if (!std::regex_search(conteudo, m, re)) {
+            throw ErroConfiguracao("JSON invalido: falta chave string \"" + chave + "\"");
+        }
+        return m[1].str();
+    };
+
+    auto extrairInt = [&](const std::string& chave) -> int {
+        std::regex re("\"" + chave + "\"\\s*:\\s*([-]?[0-9]+)");
+        if (!std::regex_search(conteudo, m, re)) {
+            throw ErroConfiguracao("JSON invalido: falta chave numerica \"" + chave + "\"");
+        }
+        int valor = std::stoi(m[1].str());
+        if (valor < 0) {
+            throw ErroConfiguracao("JSON invalido: valor negativo em \"" + chave + "\"");
+        }
+        return valor;
+    };
+
+    auto parseHoraMin = [&](const std::string& texto, int& h, int& min) {
+        std::regex re("^(\\d{2}):(\\d{2})$");
+        if (!std::regex_match(texto, m, re)) {
+            throw ErroConfiguracao("Formato de hora invalido: " + texto);
+        }
+        h   = std::stoi(m[1].str());
+        min = std::stoi(m[2].str());
+        if (h < 0 || h > 23 || min < 0 || min > 59) {
+            throw ErroConfiguracao("Hora fora do intervalo valido: " + texto);
+        }
+    };
+
+    // Lê e valida horas
+    std::string inicioStr = extrairString("inicio");
+    std::string fimStr    = extrairString("fim");
+
+    int horaInicio = 0, minutoInicio = 0;
+    int horaFim    = 0, minutoFim    = 0;
+    parseHoraMin(inicioStr, horaInicio, minutoInicio);
+    parseHoraMin(fimStr,    horaFim,    minutoFim);
+
+    // Lê tempos de verde
+    int tempoVerdeEscolarJson = extrairInt("tempo_verde_escolar");
+    int tempoVerdeNormalJson  = extrairInt("tempo_verde_normal");
+
+    // Atribuição às variáveis da classe
+    tempoVerdeEscolar_ = tempoVerdeEscolarJson;
+    tempoVerdeNormal_  = tempoVerdeNormalJson;
+
+
 }
 
 // ==================== CONTROLO DE TESTE ====================
